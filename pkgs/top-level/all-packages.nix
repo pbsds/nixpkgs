@@ -3768,6 +3768,8 @@ with pkgs;
 
   ekam = callPackage ../development/tools/build-managers/ekam { };
 
+  ekioh-flow-bin = callPackage ../applications/networking/browsers/ekioh-flow-bin { };
+
   eksctl = callPackage ../tools/admin/eksctl { };
 
   electronplayer = callPackage ../applications/video/electronplayer/electronplayer.nix { };
