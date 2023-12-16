@@ -3,8 +3,8 @@
 , audiofile
 , config
 , darwin
+, fetchFromGitHub
 , fetchpatch
-, fetchurl
 , libGL
 , libGLU
 , libICE
@@ -40,11 +40,14 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "SDL";
-  version = "1.2.15";
+  version = "1.2.15-unstable-2023-12-08";
 
-  src = fetchurl {
-    url = "https://www.libsdl.org/release/SDL-${finalAttrs.version}.tar.gz";
-    hash = "sha256-1tMWp5Pl40gVXw3ZO5eXmJM/uYqh7evMEIgp1kdKrQA=";
+  # 1.2.15 was released in 2013, 1.2.16 is not yet tagged
+  src = fetchFromGitHub {
+    owner = "libsdl-org";
+    repo = "SDL-1.2";
+    rev = "d5088e5db1bcf174f53379d543ff49093a9d6d72";
+    hash = "sha256-TA8sclOcy+3oaKMimTrXH7YLNXhNmRqXI1V4Q97JrM4=";
   };
 
   outputs = [ "out" "dev" ];
@@ -78,49 +81,12 @@ stdenv.mkDerivation (finalAttrs: {
   patches = [
     ./find-headers.patch
 
-    # Fix window resizing issues, e.g. for xmonad
-    # Ticket: http://bugzilla.libsdl.org/show_bug.cgi?id=1430
-    (fetchpatch {
-      name = "fix_window_resizing.diff";
-      url = "https://bugs.debian.org/cgi-bin/bugreport.cgi?msg=10;filename=fix_window_resizing.diff;att=2;bug=665779";
-      hash = "sha256-hj3ykyOKeDh6uPDlvwNHSowQxmR+mfhvCnHvcdhXZfw=";
-    })
-    # Fix drops of keyboard events for SDL_EnableUNICODE
-    (fetchpatch {
-      url = "https://github.com/libsdl-org/SDL-1.2/commit/0332e2bb18dc68d6892c3b653b2547afe323854b.patch";
-      hash = "sha256-5V6K0oTN56RRi48XLPQsjgLzt0a6GsjajDrda3ZEhTw=";
-    })
-    # Ignore insane joystick axis events
-    (fetchpatch {
-      url = "https://github.com/libsdl-org/SDL-1.2/commit/ab99cc82b0a898ad528d46fa128b649a220a94f4.patch";
-      hash = "sha256-8CvKHvkmidm4tFCWYhxE059hN3gwOKz6nKs5rvQ4ZKw=";
-    })
-    # https://bugzilla.libsdl.org/show_bug.cgi?id=1769
-    (fetchpatch {
-      url = "https://github.com/libsdl-org/SDL-1.2/commit/5d79977ec7a6b58afa6e4817035aaaba186f7e9f.patch";
-      hash = "sha256-t+60bC4gLFbslXm1n9nimiFrho2DnxdWdKr4H9Yp/sw=";
-    })
     # Workaround X11 bug to allow changing gamma
     # Ticket: https://bugs.freedesktop.org/show_bug.cgi?id=27222
     (fetchpatch {
       name = "SDL_SetGamma.patch";
       url = "https://src.fedoraproject.org/rpms/SDL/raw/7a07323e5cec08bea6f390526f86a1ce5341596d/f/SDL-1.2.15-x11-Bypass-SetGammaRamp-when-changing-gamma.patch";
       hash = "sha256-m7ZQ5GnfGlMkKJkrBSB3GrLz8MT6njgI9jROJAbRonQ=";
-    })
-    # Fix a build failure on OS X Mavericks
-    # Ticket: https://bugzilla.libsdl.org/show_bug.cgi?id=2085
-    (fetchpatch {
-      url = "https://github.com/libsdl-org/SDL-1.2/commit/19039324be71738d8990e91b9ba341b2ea068445.patch";
-      hash = "sha256-DCWZo0LzHJoWUr/5vL5pKIEmmz3pvr4TO6Ip8WykfDI=";
-    })
-    (fetchpatch {
-      url = "https://github.com/libsdl-org/SDL-1.2/commit/7933032ad4d57c24f2230db29f67eb7d21bb5654.patch";
-      hash = "sha256-Knq+ceL6y/zKcfJayC2gy+DKnoa8DLslBNl3laMzwa8=";
-    })
-    (fetchpatch {
-      name = "CVE-2022-34568.patch";
-      url = "https://github.com/libsdl-org/SDL-1.2/commit/d7e00208738a0bc6af302723fe64908ac35b777b.patch";
-      hash = "sha256-fuxXsqZW94/C8CKu9LakppCU4zHupj66O2MngQ4BO9o=";
     })
   ];
 
@@ -150,6 +116,7 @@ stdenv.mkDerivation (finalAttrs: {
     description = "Cross-platform multimedia library";
     license = lib.licenses.lgpl21;
     mainProgram = "sdl-config";
+    changelog = "https://github.com/libsdl-org/SDL-1.2/blob/${finalAttrs.src.rev}/WhatsNew";
     maintainers = lib.teams.sdl.members ++ (with lib.maintainers; [ lovek323 ]);
     platforms = lib.platforms.unix;
   };
