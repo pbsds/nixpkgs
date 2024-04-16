@@ -64,6 +64,8 @@ buildPythonPackage rec {
   ];
 
   postPatch = ''
+    substituteInPlace buildconfig/config_{unix,darwin}.py \
+      --replace-fail 'from distutils' 'from setuptools._distutils'
     substituteInPlace src_py/sysfont.py \
       --replace-fail 'path="fc-list"' 'path="${fontconfig}/bin/fc-list"' \
       --replace-fail /usr/X11/bin/fc-list ${fontconfig}/bin/fc-list
