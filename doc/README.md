@@ -1,5 +1,7 @@
 # Contributing to the Nixpkgs reference manual
 
+test
+
 This directory houses the sources files for the Nixpkgs reference manual.
 
 > [!IMPORTANT]
