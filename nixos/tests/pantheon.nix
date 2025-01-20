@@ -1,7 +1,7 @@
 import ./make-test-python.nix ({ pkgs, lib, ...} :
 
 {
-  name = "pantheon";
+  name = "pantheon-electric-boogaloo";
 
   meta.maintainers = lib.teams.pantheon.members;
 
