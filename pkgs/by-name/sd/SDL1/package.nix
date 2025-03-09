@@ -16,6 +16,29 @@
 , pkg-config
 , stdenv
 , unstableGitUpdater
+
+# passthru.tests
+, blender
+, directfb
+, dosbox
+, hheretic
+, hhexen
+, libvlc
+, mednafen
+, onscripter-en
+, powermanga
+, SDL_Pango
+, SDL_gfx
+, SDL_image
+, SDL_mixer
+, SDL_net
+, SDL_sixel
+, SDL_sound
+, SDL_stretch
+, SDL_ttf
+, sfxr
+, vlc
+
 # Boolean flags
 , alsaSupport ? stdenv.hostPlatform.isLinux && !stdenv.hostPlatform.isAndroid
 , libGLSupported ? lib.meta.availableOn stdenv.hostPlatform libGL
@@ -41,14 +64,14 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "SDL";
-  version = "1.2.15-unstable-2023-12-08";
+  # 1.2.15 was released in 2013, 1.2.16 is packed with fixes but not yet tagged
+  version = "1.2.15-unstable-2025-03-02";
 
-  # 1.2.15 was released in 2013, 1.2.16 is not yet tagged
   src = fetchFromGitHub {
     owner = "libsdl-org";
     repo = "SDL-1.2";
-    rev = "d5088e5db1bcf174f53379d543ff49093a9d6d72";
-    hash = "sha256-TA8sclOcy+3oaKMimTrXH7YLNXhNmRqXI1V4Q97JrM4=";
+    rev = "18bc4d1a1d27b0cf5b06be9322c65ca88282b1ee";
+    hash = "sha256-1KcP8wpzKUJAO2KjVqRFcACgaCGxdKCNF9BD2G2+aXA=";
   };
 
   outputs = [ "out" "dev" ];
@@ -112,6 +135,27 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru = {
     inherit openglSupport;
+
+    tests = lib.filterAttrs (key: value: value.meta.available) {
+      inherit
+        blender
+        directfb
+        hheretic
+        hhexen
+        mednafen
+        onscripter-en
+        powermanga
+        SDL_Pango
+        SDL_gfx
+        SDL_image
+        SDL_mixer
+        SDL_net
+        SDL_sound
+        SDL_ttf
+        sfxr
+        vlc
+        ;
+    };
 
     updateScript = unstableGitUpdater {
       tagPrefix = "release-";
