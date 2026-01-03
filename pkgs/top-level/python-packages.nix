@@ -13443,7 +13443,8 @@ self: super: with self; {
 
   pygal = callPackage ../development/python-modules/pygal { };
 
-  pygame = pygame-original;
+  # pygame-ce is better maintained upstream, the breaking point was https://github.com/NixOS/nixpkgs/pull/475917#issuecomment-3706940043
+  pygame = if pythonAtLeast "3.14" then pygame-ce else pygame-original;
 
   pygame-original = callPackage ../development/python-modules/pygame-original { };
 
