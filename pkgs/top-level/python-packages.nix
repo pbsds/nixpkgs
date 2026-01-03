@@ -13443,7 +13443,9 @@ self: super: with self; {
 
   pygal = callPackage ../development/python-modules/pygal { };
 
-  pygame = callPackage ../development/python-modules/pygame { };
+  pygame = pygame-original;
+
+  pygame-original = callPackage ../development/python-modules/pygame-original { };
 
   pygame-ce = callPackage ../development/python-modules/pygame-ce { };
 
